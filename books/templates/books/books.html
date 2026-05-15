@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Goodreads Book Page{% endblock title%}
+
+{% block content %}
+
+        <h1>Books Page</h1>
+        {% for book in books %}
+            <h4>Book Title: <a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></h4>
+            <h6><b>Book descriptions: </b>{{ book.descriptions }}</h6>
+        <br>
+        {% endfor %}
+
+{% endblock content %}
