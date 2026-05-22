@@ -13,7 +13,7 @@
 
 </head>
 <body class="mx-5">
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
     <div class="container-fluid">
 
         <a class="navbar-brand" href="{% url 'landing' %}">Goodreads</a>
@@ -71,17 +71,19 @@
         </div>
     </div>
 </nav>
-{% if messages %}
-{% for message in messages %}
-{{ message }}
-{% endfor %}
-{% endif %}
 
 
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+    {% endif %}
+    {% block content %}
 
-{% block content %}
+    {% endblock content %}
+</div>
 
-{% endblock content %}
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
