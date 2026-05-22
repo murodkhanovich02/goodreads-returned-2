@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block title %} Goodreads Login Page {% endblock title %}
 
 {% block content %}
 
-        <h1>Login Page</h1>
+<h3>Login</h3>
+<div class="row">
+    <div class="col-4">
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-success" >Login</button>
+            {{ form | crispy }}
+            <button type="submit" class="btn btn-success">Login</button>
         </form>
+    </div>
+</div>
 
 {% endblock content %}
