@@ -3,52 +3,536 @@
 {% block title %}Goodreads Book Page{% endblock title %}
 
 {% block content %}
+<style>
+    .books-section {
+    min-height: 100vh;
+    padding: 50px 20px;
+    background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.10), transparent 35%),
+        #f8fafc;
+}
 
-<div class="container mt-4">
+.books-container {
+    max-width: 1180px;
+    margin: 0 auto;
+}
 
-    <h1 class="mb-4">Books Page</h1>
+.books-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 34px;
+    padding: 28px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(16px);
+}
 
-    {% for book in books %}
+.books-subtitle {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
 
-        <div class="row mb-4 align-items-start">
+.books-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
 
-            <div class="col-md-2">
-                {% if book.cover_picture %}
-                    <img class="cover-pic img-fluid" src="{{ book.cover_picture.url }}" alt="{{ book.title }}">
-                {% else %}
-                    <img class="cover-pic img-fluid" src="/media/default_cower.png" alt="Default cover">
-                {% endif %}
+.books-header p {
+    margin: 8px 0 0;
+    color: #64748b;
+    font-size: 16px;
+}
+
+.books-count {
+    min-width: 130px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 20px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #ffffff;
+    box-shadow: 0 16px 40px rgba(37, 99, 235, 0.28);
+}
+
+.books-count span {
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.books-count small {
+    margin-top: 6px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+}
+
+.book-card {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 24px;
+
+    padding: 22px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 0 16px 46px rgba(15, 23, 42, 0.07);
+    backdrop-filter: blur(14px);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.book-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.13);
+}
+
+.book-cover-box {
+    width: 170px;
+    height: 240px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #e5e7eb;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+}
+
+.book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+.book-card:hover .book-cover {
+    transform: scale(1.05);
+}
+
+.book-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+}
+
+.book-label {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.book-top h2 {
+    margin: 0;
+    font-size: 26px;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.book-top h2 a {
+    color: #0f172a;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.book-top h2 a:hover {
+    color: #2563eb;
+}
+
+.book-description {
+    margin: 16px 0;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.book-meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.meta-item {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.meta-item span {
+    display: block;
+    margin-bottom: 4px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.meta-item strong {
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.book-actions {
+    margin-top: 18px;
+}
+
+.details-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 18px;
+    border-radius: 12px;
+
+    background: #0f172a;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.22);
+    transition:
+        transform 0.22s ease,
+        background 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.details-btn:hover {
+    background: #2563eb;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 34px rgba(37, 99, 235, 0.28);
+}
+
+.empty-books {
+    padding: 50px 24px;
+    text-align: center;
+    border-radius: 24px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 16px 46px rgba(15, 23, 42, 0.07);
+}
+
+.empty-books h3 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.empty-books p {
+    margin: 0;
+    color: #64748b;
+}
+
+.pagination-wrapper {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.pagination-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    padding: 12px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    box-shadow: 0 16px 44px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(14px);
+}
+
+.pagination-btn {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 14px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+
+    background: #ffffff;
+    color: #0f172a;
+
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+
+    transition:
+        transform 0.22s ease,
+        background 0.22s ease,
+        color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.pagination-btn:hover {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.24);
+}
+
+.pagination-btn.active {
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+}
+
+.pagination-btn.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.page-info {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .books-section {
+        padding: 30px 14px;
+    }
+
+    .books-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 22px;
+    }
+
+    .books-header h1 {
+        font-size: 30px;
+    }
+
+    .books-count {
+        width: 100%;
+        height: 82px;
+    }
+
+    .book-card {
+        grid-template-columns: 1fr;
+    }
+
+    .book-cover-box {
+        width: 100%;
+        height: 360px;
+    }
+
+    .book-meta {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-cover-box {
+        height: 300px;
+    }
+
+    .book-top h2 {
+        font-size: 22px;
+    }
+
+    .pagination-btn {
+        min-width: 38px;
+        height: 38px;
+        padding: 0 11px;
+        font-size: 13px;
+    }
+}
+</style>
+<section class="books-section">
+    <div class="books-container">
+
+        <div class="books-header">
+            <div>
+                <span class="books-subtitle">Goodreads Library</span>
+                <h1>Books Collection</h1>
+                <p>Explore available books, authors and descriptions.</p>
             </div>
 
-            <div class="col-md-8 ms-md-4">
-                <h4>
-                    Book Title:
-                    <a href="{% url 'books:book_detail' book.id %}">
-                        {{ book.title }}
-                    </a>
-                </h4>
-
-                <h6>
-                    <b>Book descriptions:</b> {{ book.descriptions }}
-                </h6>
-
-                <p>
-                    <b>Author:</b> {{ book.author }}
-                </p>
-
-                <p>
-                    <b>ISBN:</b> {{ book.isbn }}
-                </p>
+            <div class="books-count">
+                <span>{{ page_obj.paginator.count }}</span>
+                <small>Total books</small>
             </div>
+        </div>
+
+        <div class="books-grid">
+
+            {% for book in page_obj.object_list %}
+
+                <article class="book-card">
+
+                    <div class="book-cover-box">
+                        {% if book.cover_picture %}
+                            <img
+                                class="book-cover"
+                                src="{{ book.cover_picture.url }}"
+                                alt="{{ book.title }}"
+                            >
+                        {% else %}
+                            <img
+                                class="book-cover"
+                                src="/media/default_cower.png"
+                                alt="Default cover"
+                            >
+                        {% endif %}
+                    </div>
+
+                    <div class="book-info">
+
+                        <div class="book-top">
+                            <span class="book-label">Book</span>
+                            <h2>
+                                <a href="{% url 'books:book_detail' book.id %}">
+                                    {{ book.title }}
+                                </a>
+                            </h2>
+                        </div>
+
+                        <p class="book-description">
+                            {{ book.descriptions|truncatewords:28 }}
+                        </p>
+
+                        <div class="book-meta">
+                            <div class="meta-item">
+                                <span>Author</span>
+                                <strong>{{ book.author }}</strong>
+                            </div>
+
+                            <div class="meta-item">
+                                <span>ISBN</span>
+                                <strong>{{ book.isbn }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="book-actions">
+                            <a class="details-btn" href="{% url 'books:book_detail' book.id %}">
+                                View details
+                            </a>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty-books">
+                    <h3>No books found</h3>
+                    <p>There are no books available right now.</p>
+                </div>
+
+            {% endfor %}
 
         </div>
 
-    {% empty %}
 
-        <h4>No books found.</h4>
+        {% if page_obj.has_other_pages %}
+            <div class="pagination-wrapper">
 
-    {% endfor %}
+                <div class="pagination-box">
 
-</div>
+                    {% if page_obj.has_previous %}
+                        <a class="pagination-btn" href="{% url 'books:books' %}?page=1">
+                            First
+                        </a>
+
+                        <a class="pagination-btn" href="{% url 'books:books' %}?page={{ page_obj.previous_page_number }}">
+                            Previous
+                        </a>
+                    {% else %}
+                        <span class="pagination-btn disabled">First</span>
+                        <span class="pagination-btn disabled">Previous</span>
+                    {% endif %}
+
+
+                    {% for num in page_obj.paginator.page_range %}
+
+                        {% if page_obj.number == num %}
+                            <span class="pagination-btn active">{{ num }}</span>
+
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a class="pagination-btn" href="{% url 'books:books' %}?page={{ num }}">
+                                {{ num }}
+                            </a>
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    {% if page_obj.has_next %}
+                        <a class="pagination-btn" href="{% url 'books:books' %}?page={{ page_obj.next_page_number }}">
+                            Next
+                        </a>
+
+                        <a class="pagination-btn" href="{% url 'books:books' %}?page={{ page_obj.paginator.num_pages }}">
+                            Last
+                        </a>
+                    {% else %}
+                        <span class="pagination-btn disabled">Next</span>
+                        <span class="pagination-btn disabled">Last</span>
+                    {% endif %}
+
+                </div>
+
+                <p class="page-info">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </p>
+
+            </div>
+        {% endif %}
+
+    </div>
+</section>
 
 {% endblock content %}
