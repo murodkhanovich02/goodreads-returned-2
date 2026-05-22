@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -8,13 +9,7 @@
 
     <title>{% block title %}Goodreads Clone{% endblock title %}</title>
 
-    <style>
-        .profile-pic {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css">
 
 </head>
 <body class="mx-5">
@@ -81,6 +76,7 @@
 {{ message }}
 {% endfor %}
 {% endif %}
+
 
 
 {% block content %}
