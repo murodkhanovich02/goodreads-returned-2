@@ -4,16 +4,18 @@
 
 {% block content %}
 
-    <h1>Profile Page</h1>
+<h1>Profile Page</h1>
 
-    <img class="profile-pic" src="{{ user.profile_picture.url }}" alt="Profile picture">
+<img class="profile-pic" src="{{ user.profile_picture.url }}" alt="Profile picture">
 
-    <div>
-        <a href="{% url 'users:profile-edit' %}">Profile Edit</a><br>
-    </div>
-    User name: {{ user.username }}<br>
-    First name: {{ user.first_name }}<br>
-    Last name: {{ user.last_name }}<br>
-    Email: {{ user.email }}
+<br>
+User name: {{ user.username }}<br>
+First name: {{ user.first_name }}<br>
+Last name: {{ user.last_name }}<br>
+Email: {{ user.email }}
+
+<div>
+    <a href="{% url 'users:profile-edit' %}">Profile Edit</a><br>
+</div>
 
 {% endblock content %}

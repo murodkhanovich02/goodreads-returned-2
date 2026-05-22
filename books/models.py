@@ -21,6 +21,7 @@ class Books(models.Model):
     author = models.ForeignKey(Authors, on_delete=models.CASCADE)
     isbn = models.IntegerField()
     descriptions = models.TextField()
+    cover_picture = models.ImageField(default='default_cower.png')
 
     class Meta:
         verbose_name = 'Books'
