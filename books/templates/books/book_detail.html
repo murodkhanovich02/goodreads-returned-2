@@ -3,11 +3,19 @@
 {% block title %}Goodreads Book Detail Page{% endblock title %}
 
 {% block content %}
-    <div>
+<div class="row">
+    <div class="col-2">
         <img class="cover-pic" alt="cover image" src="{{ book.cover_picture.url }}">
+    </div>
+    <div>
         <h1>Book Title: {{ book.title }}</h1>
         <p>Book Author: {{ book.author }}</p>
         <p>ISBN: {{ book.isbn }}</p>
         <h4>{{ book.descriptions }}</h4>
+    </div>
+</div>
+    <div>
+
+
     </div>
 {% endblock content %}

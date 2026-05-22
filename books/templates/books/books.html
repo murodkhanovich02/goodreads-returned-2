@@ -1,14 +1,54 @@
 {% extends 'base.html' %}
 
-{% block title %}Goodreads Book Page{% endblock title%}
+{% block title %}Goodreads Book Page{% endblock title %}
 
 {% block content %}
 
-        <h1>Books Page</h1>
-        {% for book in books %}
-            <h4>Book Title: <a href="{% url 'books:book_detail' book.id %}">{{ book.title }}</a></h4>
-            <h6><b>Book descriptions: </b>{{ book.descriptions }}</h6>
-        <br>
-        {% endfor %}
+<div class="container mt-4">
+
+    <h1 class="mb-4">Books Page</h1>
+
+    {% for book in books %}
+
+        <div class="row mb-4 align-items-start">
+
+            <div class="col-md-2">
+                {% if book.cover_picture %}
+                    <img class="cover-pic img-fluid" src="{{ book.cover_picture.url }}" alt="{{ book.title }}">
+                {% else %}
+                    <img class="cover-pic img-fluid" src="/media/default_cower.png" alt="Default cover">
+                {% endif %}
+            </div>
+
+            <div class="col-md-8 ms-md-4">
+                <h4>
+                    Book Title:
+                    <a href="{% url 'books:book_detail' book.id %}">
+                        {{ book.title }}
+                    </a>
+                </h4>
+
+                <h6>
+                    <b>Book descriptions:</b> {{ book.descriptions }}
+                </h6>
+
+                <p>
+                    <b>Author:</b> {{ book.author }}
+                </p>
+
+                <p>
+                    <b>ISBN:</b> {{ book.isbn }}
+                </p>
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <h4>No books found.</h4>
+
+    {% endfor %}
+
+</div>
 
 {% endblock content %}
