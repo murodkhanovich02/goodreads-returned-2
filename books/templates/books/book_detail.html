@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block title %}Goodreads Book Detail Page{% endblock title %}
 
@@ -14,6 +15,16 @@
         <h4>{{ book.descriptions }}</h4>
     </div>
 </div>
+<div class="row">
+    <div class="col-6" >
+        <form method="POST" action="{% url 'books:reviews' book.id %}">
+            {% csrf_token %}
+            {{ review_form | crispy }}
+            <button class="btn btn-success" >Add review</button>
+        </form>
+    </div>
+</div>
+<br>
 <hr>
         <h4>Review</h4>
         {% for review in book.review_set.all %}

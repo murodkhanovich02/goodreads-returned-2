@@ -1,15 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.shortcuts import render, redirect
 from django.views import View
+from django.urls import reverse
 
-from .models import Books
-
-
-# class BookListView(ListView):
-#     template_name = 'books/books.html'
-#     queryset = Books.objects.all()
-#     context_object_name = 'books'
+from .forms import ReviewForm
+from .models import Books, Review
 
 
 class BookListView(View):
@@ -20,7 +16,6 @@ class BookListView(View):
         if search_query:
             books = books.filter(title__icontains=search_query)
 
-
         paginator = Paginator(books, 2)
         page_num = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_num)
@@ -29,17 +24,32 @@ class BookListView(View):
         }
         return render(request, 'books/books.html', context)
 
-class BookDetailView(DetailView):
-    template_name = 'books/book_detail.html'
-    pk_url_kwarg = 'id'
-    model = Books
-    context_object_name = 'book'
 
-# class BookDetailView(View):
-#
-#     def get(self, request, id):
-#         book = Books.objects.get(id=id)
-#         context = {
-#             'book': book
-#         }
-#         return render(request, 'books/book_detail.html', context)
+class BookDetailView(View):
+
+    def get(self, request, id):
+        book = Books.objects.get(id=id)
+        review_form = ReviewForm()
+        context = {
+            'book': book,
+            'review_form': review_form
+        }
+        return render(request, 'books/book_detail.html', context)
+
+
+class AddReview(LoginRequiredMixin, View):
+    def post(self, request, id):
+        book = Books.objects.get(id=id)
+        review_form = ReviewForm(data=request.POST)
+
+        if review_form.is_valid():
+            Review.objects.create(
+                book=book,
+                user=request.user,
+                stars_given=review_form.cleaned_data['stars_given'],
+                comment=review_form.cleaned_data['comment']
+            )
+
+            return redirect(reverse('books:book_detail', kwargs={'id': book.id}))
+
+        return render(request, 'books/book_detail.html', {'book': book, 'review_form': review_form})
