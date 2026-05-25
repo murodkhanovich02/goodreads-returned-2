@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from users.models import CustomUser
+from django.utils import timezone
 
 
 class Authors(models.Model):
@@ -42,6 +43,8 @@ class Review(models.Model):
             MaxValueValidator(5),
         ]
     )
+
+    created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         verbose_name = 'Review'
